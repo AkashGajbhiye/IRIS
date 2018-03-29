@@ -1,0 +1,66 @@
+# ######################### #
+#       IRIS DATA SET       #
+# ######################### #
+
+LOAD REQUIRED LIBRARIES
+```{r}
+library(dplyr)
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(randomForest)
+```
+
+ACQUIRE DATA
+```{r}
+setwd("C:/Users/AKASH/Documents/DS/IRIS")
+dat <- read.csv("Iris.csv")
+View(dat)
+str(dat)
+summary(dat)
+```
+
+DATA VISUALIZATION
+```{r}
+plot1 <- ggplot(data = dat, aes(x= dat$SepalLengthCm, y = dat$SepalWidthCm, color = Species,)) +  geom_point() + labs(x  = "Sepal Length in cms", y  = "Sepal Widdth in cms", title = " Sepal Dimenstions" )
+plot2 <- ggplot(data = dat, aes(x= dat$PetalLengthCm, y = dat$PetalWidthCm,  color = Species )) +  geom_point() + labs(x  = "Petal Length in cms", y  = "Petal Widdth in cms", title = " Petal Dimenstions" )
+grid.arrange(plot1, plot2, ncol = 2)
+```
+
+SPLIT DATA INTO 70% TRAIN & 30% TEST
+```{r}
+set.seed(200)
+train <- sample(1:150, floor(150*0.7))
+trainData <- dat[train,]
+testData <- dat[-train,]
+
+```
+
+USE k-NN ALGORITHM TO PREDICT THE TYPE OF SPECIES
+```{r}
+prediction <- knn(train = trainData[,-c(1,6)], test = testData[,-c(1,6)], cl = trainData[,6], k=12)
+```
+
+CHECK THE ACCURACY WITH CONFUSION MATRIX
+```{r}
+CrossTable(x = testData[,6], y = prediction, prop.chisq = FALSE)
+```
+WE CAN OBSERVE THAT ONLY 3 FLOWERS OUT OF 45 WERE MISCLASSIFIED
+ACCURACY = 42/ 45 = 0.9333333
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
